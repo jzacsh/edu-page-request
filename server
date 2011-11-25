@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+#
+# prototype server to simply show how basic a web server's job actually is.
+#
+
+# determines if we need to simply provide a listing of file contents to a
+# directory, or if there's a page that needs to be read.
+render() {
+  if [[ -r "pages/$1" && -d "pages/$1" ]];then
+    if [[ -r "pages/$1/index.txt" ]];then
+        cat "pages/$1/index.txt"
+    elif [[ -x "pages/$1/index.run" ]];then
+        "pages/$1/index.run" "pages/"
+    else
+      echo "Directory Listing For '$1':"
+      echo '---------------------------'
+      ls -la "pages/$1"
+    fi
+  else
+    return 1
+  fi
+}
+
+#
+# actual server logic:
+#
+
+if (( $# ));then
+  #the user actually asked for a specific page
+  render "$1" || echo "HTTP 404, '$1' not found!"
+else
+  #the user just asked for "/", meaning they want the home page
+  render "home/" || echo 'HTTP 505, problem loading home page.'
+fi
+

@@ -30,6 +30,6 @@ if (( $# ));then
   render "$1" || echo "HTTP 404, '$1' not found!"
 else
   #the user just asked for "/", meaning they want the home page
-  render "home/" || echo 'HTTP 505, problem loading home page.'
+  render "home/" || echo 'HTTP 500, problem loading home page.'
 fi
 
